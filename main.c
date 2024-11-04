@@ -22,6 +22,8 @@ int	error(int i)
 		write(2, "Problem setting philosophers.\n", 31);
 	if (i == 4)
 		write(2, "Problem setting forks.\n", 24);
+	if (i == 5)
+		write(2, "Problem creating threads.\n", 27);
 	return (1);
 }
 
@@ -44,6 +46,12 @@ int	main(int argc, char **argv)
 		return (error(4));
 	print_philos(&sim);
 	print_forks(&sim);
+	if (create_threads(sim) == 1)
+	{
+		clear_philos(&sim);
+		clear_forks(&sim);
+		return (error(5));
+	}
 	write(1, "all ok\n", 8);
 	clear_philos(&sim);
 	clear_forks(&sim);
