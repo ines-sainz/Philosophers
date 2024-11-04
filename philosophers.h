@@ -72,6 +72,7 @@ void		clear_forks(t_simulation *sim);
 void		add_back_fork(t_forks *fork, t_simulation *sim);
 t_forks		*new_fork(int i);
 void		print_forks(t_simulation *sim);
+int			create_threads(t_simulation sim);
 
 //LIBFT
 char		*ft_strtrim(char const *s1, char const *set);
