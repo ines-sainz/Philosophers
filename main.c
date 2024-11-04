@@ -36,7 +36,7 @@ int	main(int argc, char **argv)
 	sim.t_must_eat = 0;
 	if (parse(argv, &sim) == 1)
 		return (error(2));
-	printf("nº philos: %zu\nt to die: %zu\nt to eat: %zu\nt to sleep: %zu\nt must eat: %zu\n ... \n",
+	printf("SIM:\nnº philos: %zu   t to die: %zu   t to eat: %zu   t to sleep: %zu   t must eat: %zu\n ... \n",
 		sim.n_philos, sim.t_to_die, sim.t_to_eat, sim.t_to_sleep, sim.t_must_eat);
 	if (set_philos(&sim) == 1)
 		return (error(3));
@@ -45,6 +45,8 @@ int	main(int argc, char **argv)
 	print_philos(&sim);
 	print_forks(&sim);
 	write(1, "all ok\n", 8);
+	clear_philos(&sim);
+	clear_forks(&sim);
 	return (0);
 }
 
