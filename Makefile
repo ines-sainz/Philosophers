@@ -20,6 +20,7 @@ SRCS	=	main.c \
 			list_philos.c \
 			list_forks.c \
 			libft.c \
+			threads.c
 
 OBJS	=	$(SRCS:.c=.o)
 
