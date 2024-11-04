@@ -14,8 +14,8 @@
 
 long	ft_atol(char *str)
 {
-	int	nb;	//long?
-	int	i;
+	long	nb;
+	int		i;
 
 	nb = 0;
 	i = 0;
@@ -44,14 +44,15 @@ int	check_input(char *argv)
 		if (ft_isdigit(input[i]) == 0 && input[i] != '+')
 			return (free(input), 1);
 		if (input[i] == '+')
-			if (input[i + 1] == '+' || (i != 0 && ft_isdigit(input[i - 1]) == 1))
+			if (input[i + 1] == '+' || (i != 0
+					&& ft_isdigit(input[i - 1]) == 1))
 				return (free(input), 1);
 		i++;
 	}
 	j = 0;
-	while (argv[j] == 0 && argv[j + 1] == 0)
+	while ((input[j] == '+' || input[j] == '0') && input[j + 1] == '0')
 		j++;
-	if (i - (i - j) > 12)
+	if ((i - j) > 12)
 		return (free(input), 1);
 	return (free(input), 0);
 }
@@ -77,8 +78,9 @@ int	parse(char **argv, t_simulation *sim)
 		if (sim->t_must_eat >= INT_MAX || sim->t_must_eat == 0)
 			return (1);
 	}
-	if (sim->n_philos >= INT_MAX || sim->n_philos == 0 || sim->t_to_die >= INT_MAX
-		|| sim->t_to_die == 0 || sim->t_to_eat >= INT_MAX || sim->t_to_eat == 0
+	if (sim->n_philos >= INT_MAX || sim->n_philos == 0
+		|| sim->t_to_die >= INT_MAX || sim->t_to_die == 0
+		|| sim->t_to_eat >= INT_MAX || sim->t_to_eat == 0
 		|| sim->t_to_sleep >= INT_MAX || sim->t_to_sleep == 0)
 		return (1);
 	return (0);
