@@ -15,12 +15,17 @@
 void	print_philos(t_simulation *sim)
 {
 	sim->p_iterator = sim->first_philo;
+	printf("PHILOS\n");
 	while (sim->p_iterator != NULL)
 	{
-		printf("nº philo: %i\nleft fork: %i\nright fork: %i\n...\n",
-			sim->p_iterator->n_philo, sim->p_iterator->left_fork, sim->p_iterator->right_fork);
+		printf("nº philo: %i   p_to_die: %i   p_to_eat: %i   p_to_sleep: %i   p_must_eat:%i   left fork: %i   right fork: %i\n",
+			sim->p_iterator->n_philo, sim->p_iterator->p_to_die,
+			sim->p_iterator->p_to_eat, sim->p_iterator->p_to_sleep,
+			sim->p_iterator->p_must_eat, sim->p_iterator->left_fork,
+			sim->p_iterator->right_fork);
 		sim->p_iterator = sim->p_iterator->next;
 	}
+	printf("...\n");
 }
 
 void	clear_forks(t_simulation *sim)

@@ -15,11 +15,13 @@
 void	print_forks(t_simulation *sim)
 {
 	sim->f_iterator = sim->first_fork;
+	printf("FORK\n");
 	while (sim->f_iterator != NULL)
 	{
-		printf("nº fork: %i\nused: %i\n...\n", sim->f_iterator->n_fork, sim->f_iterator->used);
+		printf("nº fork: %i   used: %i\n", sim->f_iterator->n_fork, sim->f_iterator->used);
 		sim->f_iterator = sim->f_iterator->next;
 	}
+	printf("...\n");
 }
 
 void	clear_philos(t_simulation *sim)
