@@ -42,7 +42,7 @@ int	main(int argc, char **argv)
 		sim.n_philos, sim.t_to_die, sim.t_to_eat, sim.t_to_sleep, sim.t_must_eat);
 	if (set_philos(&sim) == 1)
 		return (error(3));
-	sim.test = 0;
+	sim.test = 0;//borrar
 	if (set_forks(&sim) == 1)
 		return (error(4));
 	print_philos(&sim);
