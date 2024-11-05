@@ -32,6 +32,7 @@
 typedef struct s_philos
 {
 	int				n_philo;
+	pthread_t		thread_id;
 	int				p_to_die;
 	int				p_to_eat;
 	int				p_to_sleep;
@@ -50,7 +51,9 @@ typedef struct s_forks
 
 typedef struct s_simulation
 {
+	int		test;
 	long		n_philos;
+	pthread_mutex_t	mutex; //inicializarlo de manera global
 	long		t_to_die;
 	long		t_to_eat;
 	long		t_to_sleep;
