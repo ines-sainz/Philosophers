@@ -53,7 +53,7 @@ int	main(int argc, char **argv)
 		free(sim.forks);
 		return (error(5));
 	}
-	write(1, "all ok\n", 8);
+	printf("all ok\n");
 	free(sim.philos);
 	free(sim.forks);
 	return (0);
