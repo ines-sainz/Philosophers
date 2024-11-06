@@ -12,31 +12,43 @@
 
 #include "philosophers.h"
 
+void	think(t_philos *philos, t_simulation *sim)
+{
+	printf("im philo %i and im thinking\n", philos->n_philo);
+	pthread_mutex_lock(&sim->mutex);
+	sim->test--;
+	pthread_mutex_unlock(&sim->mutex);
+}
+
 void	*do_smth(void *arg)
 {
-	t_philos *sim;
+	t_philos *philo;
 
-	sim = (t_philos *)arg;
+	philo = (t_philos *)arg;
 	int i = 0;
 	while (i < 10000)
 	{
 		//PARA BLOQUEAR Y DESBLOQUEAR UNA SECCIÓN
 		//pasamos la dirrección de mmemmoria del mutex
-		pthread_mutex_lock(&sim->sim->mutex);
-		sim->sim->test += 1;
-		pthread_mutex_unlock(&sim->sim->mutex);
+		pthread_mutex_lock(&philo->sim->mutex);
+		philo->sim->test += 1;
+		pthread_mutex_unlock(&philo->sim->mutex);
 		i++;
 	}
-	printf("hola hilo %i\n", sim->sim->test);
-	printf("a %i\n", sim->n_philo);
-	printf("b %li\n", sim->sim->t_must_eat);
+	printf("hola hilo %i\n", philo->sim->test);
+	printf("a %i\n", philo->n_philo);
+	printf("b %li\n", philo->sim->t_must_eat);
 
-	/*while (1)
+	while (1)
 	{
-		if (sim.)
-		if (sim->t_must_eat == 0)
+		if (philo->n_philo % 2 == 0)
+		{
+			think(philo, philo->sim);
+		}
+		if (philo->sim->t_must_eat == 0 || philo->sim->test <= 0) ///!!!!!!
 			break ;
-	}*/
+	}
+	printf("out loop\n");
 	return (NULL);
 }
 
