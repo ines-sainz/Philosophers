@@ -12,37 +12,14 @@
 
 #include "philosophers.h"
 
-int	set_forks(t_simulation *sim)
+long	set_time(void)
 {
-	int		i;
+	struct timeval	time;
+	long long		milliseconds;
 
-	sim->forks = (t_forks *)malloc(sim->n_philos * sizeof(t_forks));
-	if (!sim->forks)
-	{
-		free(sim->philos);
-		return (1);
-	}
-	i = 0;
-	while (i < sim->n_philos)
-	{
-		sim->forks[i].n_fork = i;
-		sim->forks[i].used = 0;
-		i++;
-	}
-	return (0);
-}
-
-void	print_forks(t_simulation *sim)
-{
-	int		i;
-
-	i = 0;
-	while (i < sim->n_philos)
-	{
-		printf("nºfork: %i   used: %i\n", sim->forks[i].n_fork, sim->forks[i].used);
-		i++;
-	}
-	printf("...\n");
+	gettimeofday(&time, NULL);
+	milliseconds = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (milliseconds);
 }
 
 int	set_philos(t_simulation *sim)
@@ -61,10 +38,12 @@ int	set_philos(t_simulation *sim)
 		sim->philos[i].p_to_eat = sim->t_to_eat;
 		sim->philos[i].p_to_sleep = sim->t_to_sleep;
 		sim->philos[i].p_must_eat = sim->t_must_eat;
-		sim->philos[i].left_fork = 0;
-		sim->philos[i].right_fork = 0;
+		pthread_mutex_init(&sim->philos[i].right_fork, NULL);
+		if (i != 0)
+			sim->philos[i].left_fork = &sim->philos[i - 1].right_fork;
 		i++;
 	}
+	sim->philos[sim->n_philos - 1].left_fork = &sim->philos[0].right_fork;
 	return (0);
 }
 
@@ -75,10 +54,10 @@ void	print_philos(t_simulation *sim)
 	i = 0;
 	while (i < sim->n_philos)
 	{
-		printf("nº philo: %i   p_to_die: %i   p_to_eat: %i   p_to_sleep: %i   p_must_eat:%i   left fork: %i   right fork: %i\n",
+		printf("nº philo: %i   p_to_die: %i   p_to_eat: %i   p_to_sleep: %i   p_must_eat:%i\n",
 		sim->philos[i].n_philo, sim->philos[i].p_to_die, sim->philos[i].p_to_eat,
-		sim->philos[i].p_to_sleep, sim->philos[i].p_must_eat,
-		sim->philos[i].left_fork, sim->philos[i].right_fork);
+		sim->philos[i].p_to_sleep, sim->philos[i].p_must_eat);
+		//*sim->philos[i].left_fork, sim->philos[i].right_fork);
 		i++;
 	}
 	printf("...\n");

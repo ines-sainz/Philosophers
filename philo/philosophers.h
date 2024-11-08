@@ -45,39 +45,39 @@ typedef struct s_philos
 	int				p_to_eat;
 	int				p_to_sleep;
 	int				p_must_eat;
-	int				left_fork;
-	int				right_fork;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	right_fork;
 }					t_philos;
 
-typedef struct s_forks
+/*typedef struct s_forks
 {
 	int				n_fork;
 	int				used;
-}					t_forks;
+	pthread_mutex_t	fork_mutxex;
+}					t_forks;*/
 
 typedef struct s_simulation
 {
 	int		test;
 	long			n_philos;
 	pthread_mutex_t	mutex; //inicializarlo de manera global
+	pthread_mutex_t	mutex_print;
 	long			t_to_die;
 	long			t_to_eat;
 	long			t_to_sleep;
 	long			t_must_eat;
+	long			start_time;
 	t_philos		*philos;
-	t_forks			*forks;
+	//t_forks			*forks;
 }					t_simulation;
 
 int			parse(char **argv, t_simulation *sim);
 int			set_philos(t_simulation *sim);
-void		add_back_philo(t_philos *philo, t_simulation *sim);
-t_philos	*new_philo(int i, t_simulation *sim);
 void		print_philos(t_simulation *sim);
 int			set_forks(t_simulation *sim);
-void		add_back_fork(t_forks *fork, t_simulation *sim);
-t_forks		*new_fork(int i);
 void		print_forks(t_simulation *sim);
 int			create_threads(t_simulation *sim);//, t_philos first_philo);
+long		set_time(void);
 
 //LIBFT
 char		*ft_strtrim(char const *s1, char const *set);

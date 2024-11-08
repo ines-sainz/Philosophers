@@ -34,7 +34,6 @@ int	main(int argc, char **argv)
 	if (argc != 5 && argc != 6)
 		return (error(1));
 	sim.philos = NULL;
-	sim.forks = NULL;
 	sim.t_must_eat = 0;
 	if (parse(argv, &sim) == 1)
 		return (error(2));
@@ -43,19 +42,14 @@ int	main(int argc, char **argv)
 	if (set_philos(&sim) == 1)
 		return (error(3));
 	sim.test = 0;//borrar
-	if (set_forks(&sim) == 1)
-		return (error(4));
 	print_philos(&sim);
-	print_forks(&sim);
 	if (create_threads(&sim) == 1)
 	{
 		free(sim.philos);
-		free(sim.forks);
 		return (error(5));
 	}
 	printf("all ok\n");
 	free(sim.philos);
-	free(sim.forks);
 	return (0);
 }
 

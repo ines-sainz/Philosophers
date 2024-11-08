@@ -14,10 +14,21 @@
 
 void	think(t_philos *philos, t_simulation *sim)
 {
-	printf("im philo %i and im thinking\n", philos->n_philo);
-	pthread_mutex_lock(&sim->mutex);
+	pthread_mutex_lock(&sim->mutex_print);
+	printf("%li im philo %i and im thinking\n", set_time() - sim->start_time, philos->n_philo);
+	printf("%li set time\n", set_time());
+	pthread_mutex_unlock(&sim->mutex_print);
+	/*pthread_mutex_lock(&sim->mutex);
 	sim->test--;
-	pthread_mutex_unlock(&sim->mutex);
+	pthread_mutex_unlock(&sim->mutex);*/
+}
+
+void	eat(t_philos *philos, t_simulation *sim)
+{
+	pthread_mutex_lock(&sim->mutex_print);
+	sim->t_must_eat--;
+	printf("%li im philo %i and im eating\n", set_time() - sim->start_time, philos->n_philo);
+	pthread_mutex_unlock(&sim->mutex_print);
 }
 
 void	*do_smth(void *arg)
@@ -25,8 +36,8 @@ void	*do_smth(void *arg)
 	t_philos *philo;
 
 	philo = (t_philos *)arg;
-	int i = 0;
-	while (i < 10000)
+	/*int i = 0;
+	while (i < 100)
 	{
 		//PARA BLOQUEAR Y DESBLOQUEAR UNA SECCIÓN
 		//pasamos la dirrección de mmemmoria del mutex
@@ -34,18 +45,22 @@ void	*do_smth(void *arg)
 		philo->sim->test += 1;
 		pthread_mutex_unlock(&philo->sim->mutex);
 		i++;
-	}
+	}*/
 	printf("hola hilo %i\n", philo->sim->test);
-	printf("a %i\n", philo->n_philo);
-	printf("b %li\n", philo->sim->t_must_eat);
 
 	while (1)
 	{
-		if (philo->n_philo % 2 == 0)
+		if (philo->n_philo % 2 != 0)
 		{
 			think(philo, philo->sim);
 		}
-		if (philo->sim->t_must_eat == 0 || philo->sim->test <= 0) ///!!!!!!
+		if (philo->n_philo % 2 == 0)
+		{
+			eat(philo, philo->sim);
+		}
+		//if (philo->sim->t_must_eat <= 0 || philo->sim->test <= 0) ///!!!!!!
+		//if (philo->sim->test <= 0) ///!!!!!!
+		if (philo->sim->t_must_eat <= 0)
 			break ;
 	}
 	printf("out loop\n");
@@ -59,10 +74,14 @@ int	create_threads(t_simulation *sim)
 
 	(void)sim;
 
+	sim->start_time = set_time();
+
+	printf ("start time %li\n", sim->start_time);
 	//INICIALIZAMOS EL MUTEX
 	//dirección de memoria del mutex
 	//argumentos
 	pthread_mutex_init(&sim->mutex, NULL);
+	pthread_mutex_init(&sim->mutex_print, NULL);
 
 	sim->t_must_eat = sim->n_philos * sim->t_must_eat;
 	if (sim->t_must_eat == 0)
@@ -99,6 +118,14 @@ int	create_threads(t_simulation *sim)
 	printf("times_to_eat: %li\n", sim->t_must_eat);
 	//DESTRUIMOS EL MUTEX
 	//direccion de memoria del mutex
+	i = 0;
+	while (i < sim->n_philos)
+	{
+		pthread_mutex_destroy(&sim->philos->right_fork);
+		i++;
+	}
 	pthread_mutex_destroy(&sim->mutex);
+	printf("end time %li\n", set_time());
+	printf("total time = %li\n", set_time() - sim->start_time);
 	return (0);
 }
