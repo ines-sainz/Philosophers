@@ -29,6 +29,7 @@ int	set_philos(t_simulation *sim)
 	sim->philos = (t_philos *)malloc(sim->n_philos * sizeof(t_philos));
 	if (!sim->philos)
 		return (1);
+	sim->start_time = set_time();
 	i = 0;
 	while (i < sim->n_philos)
 	{
@@ -38,12 +39,13 @@ int	set_philos(t_simulation *sim)
 		sim->philos[i].p_to_eat = sim->t_to_eat;
 		sim->philos[i].p_to_sleep = sim->t_to_sleep;
 		sim->philos[i].p_must_eat = sim->t_must_eat;
+		sim->philos[i].last_eat = sim->start_time;
 		pthread_mutex_init(&sim->philos[i].right_fork, NULL);
 		if (i != 0)
 			sim->philos[i].left_fork = &sim->philos[i - 1].right_fork;
 		i++;
 	}
-	sim->philos[sim->n_philos - 1].left_fork = &sim->philos[0].right_fork;
+	sim->philos[0].left_fork = &sim->philos[sim->n_philos - 1].right_fork;
 	return (0);
 }
 
