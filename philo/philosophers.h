@@ -45,6 +45,7 @@ typedef struct s_philos
 	int				p_to_eat;
 	int				p_to_sleep;
 	int				p_must_eat;
+	long			last_eat;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	right_fork;
 }					t_philos;
