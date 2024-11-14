@@ -35,6 +35,7 @@ int	main(int argc, char **argv)
 		return (error(1));
 	sim.philos = NULL;
 	sim.t_must_eat = 0;
+	sim.loop = 0;
 	if (parse(argv, &sim) == 1)
 		return (error(2));
 	printf("SIM:\nnº philos: %zu   t to die: %zu   t to eat: %zu   t to sleep: %zu   t must eat: %zu\n ... \n",
