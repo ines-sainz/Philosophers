@@ -69,6 +69,7 @@ typedef struct s_simulation
 	long			t_must_eat;
 	long			start_time;
 	t_philos		*philos;
+	int				loop;
 	//t_forks			*forks;
 }					t_simulation;
 
@@ -79,6 +80,7 @@ int			set_forks(t_simulation *sim);
 void		print_forks(t_simulation *sim);
 int			create_threads(t_simulation *sim);//, t_philos first_philo);
 long		set_time(void);
+int			sleeping(long time_to_sleep, t_simulation *sim);
 
 //LIBFT
 char		*ft_strtrim(char const *s1, char const *set);
