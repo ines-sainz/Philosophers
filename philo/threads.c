@@ -23,41 +23,67 @@ void	to_think(t_philos *philos, t_simulation *sim)
 	pthread_mutex_unlock(&sim->mutex);*/
 }
 
-void	to_eat(t_philos *philos, t_simulation *sim)
+int	to_eat(t_philos *philo, t_simulation *sim)
 {
-	long	time_of_sleep;
+	long	act_time;
 
 	if (sim->n_philos == 1)
 	{
-		printf("HELP!!!\n"); //to solve
-		return ;
+		pthread_mutex_lock(&philo->right_fork);
+		pthread_mutex_lock(&sim->mutex_print);
+		printf("%li im philo %i and i took the right fork\n", set_time() - sim->start_time, philo->n_philo);
+		sleeping(sim->t_to_die, sim);
+		//usleep(sim->t_to_die * 1000);
+		pthread_mutex_unlock(&philo->right_fork);
+		printf("%li philo %i died before eating\n", set_time() - sim->start_time, philo->n_philo);
+		pthread_mutex_unlock(&sim->mutex_print);
+		sim->loop = 1;
+		return (1);
 	}
 	//lock right fork
-	pthread_mutex_lock(&philos->right_fork);
+	pthread_mutex_lock(&philo->right_fork);
 	pthread_mutex_lock(&sim->mutex_print);
-	printf("%li im philo %i and i took the right fork\n", set_time() - sim->start_time, philos->n_philo);
+	printf("%li im philo %i and i took the right fork\n", set_time() - sim->start_time, philo->n_philo);
 	pthread_mutex_unlock(&sim->mutex_print);
 
 	//lock left fork
-	pthread_mutex_lock(&(*philos->left_fork));
+	pthread_mutex_lock(&(*philo->left_fork));
 	pthread_mutex_lock(&sim->mutex_print);
-	printf("%li im philo %i and i took the left fork\n", set_time() - sim->start_time, philos->n_philo);
+	printf("%li im philo %i and i took the left fork\n", set_time() - sim->start_time, philo->n_philo);
 	pthread_mutex_unlock(&sim->mutex_print);
 
 	//eating
 	pthread_mutex_lock(&sim->mutex_print);
-	if ((set_time() - philos->last_eat) + sim->t_to_eat > sim->t_to_die)
-		time_of_sleep = sim->t_to_die * 1000;
-	else
-		time_of_sleep = sim->t_to_eat * 1000;
-	printf("%li im philo %i and im eating\n", set_time() - sim->start_time, philos->n_philo);
+	act_time = set_time();
+	printf("act_time - last_eat: %li to_eat: %li to_die: %li last_eat: %li\n",
+		(act_time - philo->last_eat), sim->t_to_eat, sim->t_to_die, (philo->last_eat - sim->start_time));
 	sim->t_must_eat--;
+	if (act_time - philo->last_eat > sim->t_to_die)
+	{
+		printf("philo %i died before eating\n", philo->n_philo);
+		sim->loop = 1;
+		return (1);
+	}
+	philo->last_eat = act_time;
 	pthread_mutex_unlock(&sim->mutex_print);
-	usleep(time_of_sleep);
+	if (sim->t_to_eat > sim->t_to_die)
+	{
+		printf("philo %i died while eating\n", philo->n_philo);
+		sleeping(sim->t_to_die, sim);
+		//usleep(sim->t_to_die * 1000);
+		sim->loop = 1;
+		return (1);
+	}
+	printf("%li im philo %i and im eating\n", act_time - sim->start_time, philo->n_philo);
+	sleeping(sim->t_to_eat, sim);
+	//usleep(sim->t_to_eat * 1000);
 
 	//leave forks
-	pthread_mutex_unlock(&philos->right_fork);
-	pthread_mutex_unlock(philos->left_fork);
+	printf("%li philo %i left forks, last_eat: %li\n", set_time() - philo->sim->start_time, philo->n_philo, (philo->last_eat - sim->start_time));
+	pthread_mutex_unlock(&philo->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
+
+	return (0);
 
 /*
 	pthread_mutex_lock(&sim->mutex_print);
@@ -66,12 +92,34 @@ void	to_eat(t_philos *philos, t_simulation *sim)
 	pthread_mutex_unlock(&sim->mutex_print);*/
 }
 
-void	to_sleep(t_philos *philo)
+int	to_sleep(t_philos *philo)
 {
+	long	act_time;
+
+	pthread_mutex_lock(&philo->sim->mutex_print);
+	act_time = set_time();
+	if (act_time - philo->last_eat > philo->p_to_die)
+	{
+		printf("philo %i died before sleeping\n", philo->n_philo);
+		pthread_mutex_unlock(&philo->sim->mutex_print);
+		philo->sim->loop = 1;
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->sim->mutex_print);
 	if (philo->p_to_sleep > philo->p_to_die)
-		usleep(philo->p_to_die);
+	{
+		printf("philo %i died while sleeping\n", philo->n_philo);
+		sleeping(philo->p_to_die, philo->sim);
+		//usleep(philo->p_to_die * 1000);
+		philo->sim->loop = 1;
+		return (1);
+	}
 	else
-		usleep(philo->p_to_eat * 1000);
+	{
+		sleeping(philo->p_to_sleep, philo->sim);
+		//usleep(philo->p_to_sleep * 1000);
+	}
+	return (0);
 }
 
 void	*do_smth(void *arg)
@@ -90,18 +138,36 @@ void	*do_smth(void *arg)
 		i++;
 	}*/
 	printf("hola hilo %i\n", philo->sim->test);
-
+	if (philo->n_philo % 2 != 0)
+	{
+		if (philo->p_to_eat > philo->p_to_die)
+		{
+			sleeping(philo->p_to_die, philo->sim);
+			//usleep(philo->p_to_die);
+		}
+		else
+		{
+			sleeping(philo->p_to_eat, philo->sim);
+			//usleep(philo->p_to_eat * 1000);
+		}
+	}
+	//t_to_die t_to_eat t_to_sleep
 	while (1)
 	{
-		if (philo->n_philo % 2 != 0)
+		if (to_eat(philo, philo->sim) == 1)
 		{
-			if (philo->p_to_eat > philo->p_to_die)
-				usleep(philo->p_to_die);
-			else
-				usleep(philo->p_to_eat * 1000);
+			pthread_mutex_lock(&philo->sim->mutex_print);
+			printf("%li philo %i has died in eating\n", set_time() - philo->sim->start_time, philo->n_philo);
+			pthread_mutex_unlock(&philo->sim->mutex_print);
+			break;
 		}
-		to_eat(philo, philo->sim);
-		to_sleep(philo);
+		if (to_sleep(philo) == 1)
+		{
+			pthread_mutex_lock(&philo->sim->mutex_print);
+			printf("%li philo %i has died in sleeping\n", set_time() - philo->sim->start_time, philo->n_philo);
+			pthread_mutex_unlock(&philo->sim->mutex_print);
+			break;
+		}
 		to_think(philo, philo->sim);
 	/*	if (philo->n_philo % 2 != 0)
 		{
@@ -109,7 +175,7 @@ void	*do_smth(void *arg)
 		}*/
 		//if (philo->sim->t_must_eat <= 0 || philo->sim->test <= 0) ///!!!!!!
 		//if (philo->sim->test <= 0) ///!!!!!!
-		if (philo->sim->t_must_eat <= 0 && philo->p_must_eat > 0)
+		if ((philo->sim->t_must_eat <= 0 && philo->p_must_eat > 0) || philo->sim->loop == 1)
 			break ;
 	}
 	printf("out loop\n");
@@ -142,9 +208,11 @@ int	create_threads(t_simulation *sim)
 	//funcion con las tareas del hilo
 	//parámetros de la función
 	printf("n_philos= %li\n", sim->n_philos);
+	sim->start_time = set_time();
 	i = 0;
 	while (i < sim->n_philos)
 	{
+		sim->philos[i].last_eat = sim->start_time;
 		created = pthread_create(&(sim->philos[i].thread_id), NULL, do_smth, &sim->philos[i]);
 		if (created != 0)
 			return (1);
