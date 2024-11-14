@@ -12,6 +12,26 @@
 
 #include "philosophers.h"
 
+int	sleeping(long time_to_sleep, t_simulation *sim)
+{
+	long	time;
+	long	first_time;
+
+	first_time = set_time();
+	time = 0;
+	while (time < time_to_sleep)
+	{
+	//	printf("time %li\n", time);
+		time = set_time() - first_time;
+		if (time > sim->t_to_die || sim->loop == 1)
+		{
+			printf("sleep break\n");
+			break ;
+		}
+	}
+	return (0);
+}
+
 long	set_time(void)
 {
 	struct timeval	time;
@@ -29,7 +49,6 @@ int	set_philos(t_simulation *sim)
 	sim->philos = (t_philos *)malloc(sim->n_philos * sizeof(t_philos));
 	if (!sim->philos)
 		return (1);
-	sim->start_time = set_time();
 	i = 0;
 	while (i < sim->n_philos)
 	{
@@ -39,7 +58,6 @@ int	set_philos(t_simulation *sim)
 		sim->philos[i].p_to_eat = sim->t_to_eat;
 		sim->philos[i].p_to_sleep = sim->t_to_sleep;
 		sim->philos[i].p_must_eat = sim->t_must_eat;
-		sim->philos[i].last_eat = sim->start_time;
 		pthread_mutex_init(&sim->philos[i].right_fork, NULL);
 		if (i != 0)
 			sim->philos[i].left_fork = &sim->philos[i - 1].right_fork;
