@@ -21,7 +21,6 @@ int	sleeping(long time_to_sleep, t_simulation *sim)
 	time = 0;
 	while (time < time_to_sleep)
 	{
-	//	printf("time %li\n", time);
 		time = set_time() - first_time;
 		if (time > sim->t_to_die || sim->loop == 1)
 		{
