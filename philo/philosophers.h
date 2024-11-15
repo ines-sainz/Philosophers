@@ -46,6 +46,8 @@ typedef struct s_philos
 	int				p_to_sleep;
 	int				p_must_eat;
 	long			last_eat;
+	long			act_time;
+	long			philo_time;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	right_fork;
 }					t_philos;
@@ -80,7 +82,10 @@ int			set_forks(t_simulation *sim);
 void		print_forks(t_simulation *sim);
 int			create_threads(t_simulation *sim);//, t_philos first_philo);
 long		set_time(void);
-int			sleeping(long time_to_sleep, t_simulation *sim);
+int			sleeping(t_philos *philo, long time_to_sleep, t_simulation *sim);
+int	one_philo_sim(t_philos *philo, t_simulation *sim);
+void	lock_forks(t_philos *philo, t_simulation *sim);
+int	eating(t_philos *philo, t_simulation *sim);
 
 //LIBFT
 char		*ft_strtrim(char const *s1, char const *set);
