@@ -12,21 +12,15 @@
 
 #include "philosophers.h"
 
-int	sleeping(long time_to_sleep, t_simulation *sim)
+int	sleeping(t_philos *philo, long time_to_sleep, t_simulation *sim)
 {
-	long	time;
-	long	first_time;
-
-	first_time = set_time();
-	time = 0;
-	while (time < time_to_sleep)
+	philo->act_time = set_time();
+	philo->philo_time = 0;
+	while (philo->philo_time < time_to_sleep)
 	{
-		time = set_time() - first_time;
-		if (time > sim->t_to_die || sim->loop == 1)
-		{
-			printf("sleep break\n");
+		if (philo->philo_time > sim->t_to_die || sim->loop == 1)
 			break ;
-		}
+		philo->philo_time = set_time() - philo->act_time;
 	}
 	return (0);
 }
@@ -73,7 +67,7 @@ void	print_philos(t_simulation *sim)
 	i = 0;
 	while (i < sim->n_philos)
 	{
-		printf("nº philo: %i   p_to_die: %i   p_to_eat: %i   p_to_sleep: %i   p_must_eat:%i\n",
+		printf("nº philo: %i   p_to_die: %i   p_to_eat: %i   p_to_sleep: %i   p_must_eat:%i\n",//borrar
 		sim->philos[i].n_philo, sim->philos[i].p_to_die, sim->philos[i].p_to_eat,
 		sim->philos[i].p_to_sleep, sim->philos[i].p_must_eat);
 		//*sim->philos[i].left_fork, sim->philos[i].right_fork);
