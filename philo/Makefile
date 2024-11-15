@@ -18,7 +18,8 @@ SRCS	=	main.c \
 			parse.c \
 			set_table.c \
 			libft.c \
-			threads.c
+			threads.c \
+			actions.c
 
 OBJS	=	$(SRCS:.c=.o)
 
