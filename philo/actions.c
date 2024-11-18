@@ -15,7 +15,6 @@
 int	eating(t_philos *philo, t_simulation *sim)
 {
 	philo->act_time = set_time();
-	sim->t_must_eat--;
 	if (philo->act_time - philo->last_eat > sim->t_to_die)
 	{
 		pthread_mutex_lock(&sim->mutex_print);
@@ -37,11 +36,15 @@ int	eating(t_philos *philo, t_simulation *sim)
 		sim->loop = 1;
 		pthread_mutex_unlock(&philo->right_fork);
 		pthread_mutex_unlock(philo->left_fork);
+		pthread_mutex_unlock(&sim->mutex_print);
 		return (1);
 	}
 	pthread_mutex_lock(&sim->mutex_print);
 	if (sim->loop == 0)
+	{
 		printf("%li %i is eating\n", philo->act_time - sim->start_time, philo->n_philo); //add +1
+		sim->t_must_eat--;
+	}
 	pthread_mutex_unlock(&sim->mutex_print);
 	sleeping(philo, sim->t_to_eat, sim);
 	return (0);
