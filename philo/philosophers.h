@@ -62,6 +62,7 @@ typedef struct s_philos
 typedef struct s_simulation
 {
 	int		test;
+	pthread_t		death_thread;
 	long			n_philos;
 	pthread_mutex_t	mutex; //inicializarlo de manera global
 	pthread_mutex_t	mutex_print;
