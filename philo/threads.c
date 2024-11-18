@@ -12,11 +12,11 @@
 
 #include "philosophers.h"
 
-void	to_think(t_philos *philos, t_simulation *sim)
+void	to_think(t_philos *philo, t_simulation *sim)
 {
 	pthread_mutex_lock(&sim->mutex_print);
 	if (sim->loop == 0)
-		printf("%li %i is thinking\n", set_time() - sim->start_time, philos->n_philo); //add +1
+		printf("%li %i is thinking\n", set_time() - sim->start_time, philo->n_philo); //add +1
 	pthread_mutex_unlock(&sim->mutex_print);
 }
 
@@ -62,7 +62,13 @@ int	to_sleep(t_philos *philo)
 		return (1);
 	}
 	else
+	{
+		pthread_mutex_lock(&philo->sim->mutex_print);
+		if (philo->sim->loop == 0)
+			printf("%li %i is sleeping\n", set_time() - philo->sim->start_time, philo->n_philo); //add +1
+		pthread_mutex_unlock(&philo->sim->mutex_print);
 		sleeping(philo, philo->p_to_sleep, philo->sim);
+	}
 	return (0);
 }
 
@@ -71,7 +77,7 @@ void	*do_smth(void *arg)
 	t_philos *philo;
 
 	philo = (t_philos *)arg;
-	printf("hola hilo %i\n", philo->sim->test);//borrar
+	printf("hola hilo %i\n", philo->n_philo);//borrar
 	if (philo->n_philo % 2 != 0)
 	{
 		if (philo->p_to_eat > philo->p_to_die)
@@ -100,9 +106,23 @@ void	*do_smth(void *arg)
 		}
 		to_think(philo, philo->sim);
 		if ((philo->sim->t_must_eat <= 0 && philo->p_must_eat > 0) || philo->sim->loop == 1)
+		{
+			pthread_mutex_lock(&philo->sim->mutex_print);
+			philo->sim->loop = 1;
+			pthread_mutex_unlock(&philo->sim->mutex_print);
 			break ;
+		}
 	}
 	printf("out loop\n");//borrar
+	return (NULL);
+}
+
+void	*death(void *arg)
+{
+	t_simulation	*sim;
+
+	sim = (t_simulation *)arg;
+	printf("im death %li\n", sim->n_philos);
 	return (NULL);
 }
 
@@ -114,12 +134,11 @@ int	create_threads(t_simulation *sim)
 
 	pthread_mutex_init(&sim->mutex, NULL);
 	pthread_mutex_init(&sim->mutex_print, NULL);
-	sim->t_must_eat = (sim->n_philos * sim->t_must_eat) - 1;
-	/*if (sim->t_must_eat == 0)
-		sim->t_must_eat = -1;*/
-	printf("times_to_eat: %li\n", sim->t_must_eat);//borrar
+	sim->t_must_eat = (sim->n_philos * sim->t_must_eat);
 
+	printf("times_to_eat: %li\n", sim->t_must_eat);//borrar
 	printf("n_philos= %li\n", sim->n_philos); //borrar
+	pthread_create(&(sim->death_thread), NULL, death, sim);
 	sim->start_time = set_time();
 	i = 0;
 	while (i < sim->n_philos)
@@ -138,7 +157,7 @@ int	create_threads(t_simulation *sim)
 		pthread_join(sim->philos[i].thread_id, NULL);
 		i++;
 	}
-
+	pthread_join(sim->death_thread, NULL);
 	printf("times_to_eat: %li\n", sim->t_must_eat);//borrar
 
 	i = 0;
@@ -151,3 +170,14 @@ int	create_threads(t_simulation *sim)
 	printf("total time = %li\n", set_time() - sim->start_time);//borrar
 	return (0);
 }
+
+/*
+1 800 200 200 (muere)
+5 800 200 200 (viven)
+5 800 200 200 7 (viven y cada uno come 7 veces)
+4 410 200 200 (viven)
+4 310 200 100 (mueren)
+3 310 103 103 (tienen que vivir)
+3 310 104 104 (tienen que morir)
+181 400 200 200 (mueren)
+*/
