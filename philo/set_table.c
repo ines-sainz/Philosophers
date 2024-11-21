@@ -19,13 +19,17 @@ int	sleeping(t_philos *philo, long time_to_sleep, t_simulation *sim)
 	gettimeofday(&time, NULL);
 	philo->act_time = (time.tv_sec * 1000) + (time.tv_usec / 1000);
 	philo->philo_time = 0;
-	while (philo->philo_time < time_to_sleep)
+	pthread_mutex_lock(&philo->sim->mutex_print);
+	while (philo->philo_time < time_to_sleep
+		&& (philo->philo_time < sim->t_to_die || sim->loop == 0))
 	{
-		if (philo->philo_time > sim->t_to_die || sim->loop == 1)
-			break ;
+		pthread_mutex_unlock(&philo->sim->mutex_print);
 		gettimeofday(&time, NULL);
-		philo->philo_time = ((time.tv_sec * 1000) + (time.tv_usec / 1000)) - philo->act_time;
+		philo->philo_time = ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+		philo->philo_time -= philo->act_time;
+		pthread_mutex_lock(&philo->sim->mutex_print);
 	}
+	pthread_mutex_unlock(&philo->sim->mutex_print);
 	return (0);
 }
 
@@ -50,7 +54,7 @@ int	set_philos(t_simulation *sim)
 	while (i < sim->n_philos)
 	{
 		sim->philos[i].sim = sim;
-		sim->philos[i].n_philo = i;
+		sim->philos[i].n_philo = i + 1;
 		sim->philos[i].p_to_die = sim->t_to_die;
 		sim->philos[i].p_to_eat = sim->t_to_eat;
 		sim->philos[i].p_to_sleep = sim->t_to_sleep;
@@ -62,19 +66,4 @@ int	set_philos(t_simulation *sim)
 	}
 	sim->philos[0].left_fork = &sim->philos[sim->n_philos - 1].right_fork;
 	return (0);
-}
-
-void	print_philos(t_simulation *sim)
-{
-	int	i;
-
-	i = 0;
-	while (i < sim->n_philos)
-	{
-		printf("nº philo: %i   p_to_die: %i   p_to_eat: %i   p_to_sleep: %i   p_must_eat:%i\n",//borrar
-		sim->philos[i].n_philo, sim->philos[i].p_to_die, sim->philos[i].p_to_eat,
-		sim->philos[i].p_to_sleep, sim->philos[i].p_must_eat);
-		i++;
-	}
-	printf("...\n");
 }

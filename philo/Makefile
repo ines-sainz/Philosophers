@@ -12,14 +12,15 @@
 
 NAME	=	philo
 CC		=	gcc
-CFLAGS	=	-Wall -Werror -Wextra -g3 #-fsanitize=address -fsanitize=leak
+CFLAGS	=	-Wall -Werror -Wextra -O0 #-g3 -fsanitize=thread #-fsanitize=leak
 
 SRCS	=	main.c \
 			parse.c \
 			set_table.c \
 			libft.c \
 			threads.c \
-			actions.c
+			actions.c \
+			death.c
 
 OBJS	=	$(SRCS:.c=.o)
 

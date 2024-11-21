@@ -39,32 +39,24 @@
 typedef struct s_philos
 {
 	struct s_simulation	*sim;
-	int				n_philo;
-	pthread_t		thread_id;
-	int				p_to_die;
-	int				p_to_eat;
-	int				p_to_sleep;
-	int				p_must_eat;
-	long			last_eat;
-	long			act_time;
-	long			philo_time;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	right_fork;
-}					t_philos;
-
-/*typedef struct s_forks
-{
-	int				n_fork;
-	int				used;
-	pthread_mutex_t	fork_mutxex;
-}					t_forks;*/
+	int					n_philo;
+	pthread_t			thread_id;
+	int					p_to_die;
+	int					p_to_eat;
+	int					p_to_sleep;
+	int					p_must_eat;
+	long				last_eat;
+	long				act_time;
+	long				philo_time;
+	pthread_mutex_t		*left_fork;
+	pthread_mutex_t		right_fork;
+}						t_philos;
 
 typedef struct s_simulation
 {
-	int		test;
 	pthread_t		death_thread;
 	long			n_philos;
-	pthread_mutex_t	mutex; //inicializarlo de manera global
+	pthread_mutex_t	mutex;
 	pthread_mutex_t	mutex_print;
 	long			t_to_die;
 	long			t_to_eat;
@@ -73,20 +65,18 @@ typedef struct s_simulation
 	long			start_time;
 	t_philos		*philos;
 	int				loop;
-	//t_forks			*forks;
 }					t_simulation;
 
 int			parse(char **argv, t_simulation *sim);
 int			set_philos(t_simulation *sim);
-void		print_philos(t_simulation *sim);
-int			set_forks(t_simulation *sim);
-void		print_forks(t_simulation *sim);
-int			create_threads(t_simulation *sim);//, t_philos first_philo);
+int			create_threads(t_simulation *sim);
 long		set_time(void);
 int			sleeping(t_philos *philo, long time_to_sleep, t_simulation *sim);
-int	one_philo_sim(t_philos *philo, t_simulation *sim);
-void	lock_forks(t_philos *philo, t_simulation *sim);
-int	eating(t_philos *philo, t_simulation *sim);
+int			one_philo_sim(t_philos *philo, t_simulation *sim);
+int			eating(t_philos *philo, t_simulation *sim);
+void		print_actions(t_simulation *sim, t_philos *philo, char *action);
+void		*death(void *arg);
+int			to_eat(t_philos *philo, t_simulation *sim);
 
 //LIBFT
 char		*ft_strtrim(char const *s1, char const *set);
@@ -94,15 +84,6 @@ char		*ft_strchr(const char *s, int c);
 size_t		ft_strlen(const char *s);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 int			ft_isdigit(int c);
+int			ft_strncmp(const char *s1, const char *s2, size_t n);
 
 #endif
-
-/*
-NEW FUNCTIONS
--   int usleep(useconds_t usec);
--   int pthread_join(pthread_t thread, void **retval);
--   int pthread_create(pthread_t *restrict thread,
-        const pthread_attr_t *restrict attr, void *(*start_routine)(void *), void *restrict arg);
--   int pthread_detach(pthread_t thread);
--   int gettimeofday(struct timeval *restrict tv, struct timezone *_Nullable restrict tz);
-*/

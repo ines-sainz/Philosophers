@@ -38,39 +38,13 @@ int	main(int argc, char **argv)
 	sim.loop = 0;
 	if (parse(argv, &sim) == 1)
 		return (error(2));
-	printf("SIM:\nnº philos: %zu   t to die: %zu   t to eat: %zu   t to sleep: %zu   t must eat: %zu\n ... \n",
-		sim.n_philos, sim.t_to_die, sim.t_to_eat, sim.t_to_sleep, sim.t_must_eat);
 	if (set_philos(&sim) == 1)
 		return (error(3));
-	sim.test = 0;//borrar
-	print_philos(&sim);
 	if (create_threads(&sim) == 1)
 	{
 		free(sim.philos);
 		return (error(5));
 	}
-	printf("all ok\n");
 	free(sim.philos);
 	return (0);
 }
-
-/*
-void    *saludo()
-{
-    printf("Hola, mundo\n");
-}
-
-int main(void)
-{
-    pthread_t   hilo;
-    int         resultado;
-                                      ->son las características del hilo
-    resultado = pthread_create(&hilo, NULL, saludo, NULL);->parámetros de la función
-                                                    ->funcion con las tareas del hilo
-    if (resultado == 0)
-        return (1);
-    ->espera al hilo antes de salir
-    pthread_join(hilo, NULL);
-                        ->valor que devuelve la funcion se almacena aquí
-}
-*/
