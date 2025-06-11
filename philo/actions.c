@@ -12,6 +12,16 @@
 
 #include "philosophers.h"
 
+/**
+ * @brief Executes the eating action for a philosopher and checks for death.
+ *
+ * Updates the philosopher's last eating time, prints actions, and simulates
+ * eating while checking if the philosopher has died due to starvation.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @param sim Pointer to the simulation structure.
+ * @return 1 if the philosopher dies during the action, 0 otherwise.
+ */
 int	eating(t_philos *philo, t_simulation *sim)
 {
 	philo->act_time = set_time();
@@ -39,6 +49,17 @@ int	eating(t_philos *philo, t_simulation *sim)
 	return (0);
 }
 
+/**
+ * @brief Handles the process for a philosopher to eat.
+ *
+ * Manages the acquisition of forks (mutexes), invokes the eating routine,
+ * and releases the forks afterwards. Handles odd and even philosopher
+ * ordering for avoiding deadlocks.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @param sim Pointer to the simulation structure.
+ * @return 1 if the philosopher dies during the process, 0 otherwise.
+ */
 int	to_eat(t_philos *philo, t_simulation *sim)
 {
 	if (one_philo_sim(philo, sim) == 1)
@@ -62,6 +83,16 @@ int	to_eat(t_philos *philo, t_simulation *sim)
 	return (0);
 }
 
+/**
+ * @brief Handles the edge case where there is only one philosopher.
+ *
+ * Since the philosopher cannot acquire two forks, simulates their death after
+ * the time to die expires.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @param sim Pointer to the simulation structure.
+ * @return 1 if it's a one-philosopher simulation (and it ends), 0 otherwise.
+ */
 int	one_philo_sim(t_philos *philo, t_simulation *sim)
 {
 	if (sim->n_philos == 1)
@@ -81,6 +112,16 @@ int	one_philo_sim(t_philos *philo, t_simulation *sim)
 	return (0);
 }
 
+/**
+ * @brief Prints the current action of a philosopher if the simulation is active.
+ *
+ * Ensures synchronized printing using a mutex. Handles the special case of
+ * printing a death message and updates the simulation state accordingly.
+ *
+ * @param sim Pointer to the simulation structure.
+ * @param philo Pointer to the philosopher structure.
+ * @param action String describing the action to print.
+ */
 void	print_actions(t_simulation *sim, t_philos *philo, char *action)
 {
 	static int	print_death;
