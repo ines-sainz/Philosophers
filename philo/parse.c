@@ -12,6 +12,14 @@
 
 #include "philosophers.h"
 
+/**
+ * @brief Converts a string to a long integer.
+ *
+ * Skips whitespaces and optional '+' sign, then parses numeric characters.
+ *
+ * @param str The input string to convert.
+ * @return The resulting long integer.
+ */
 long	ft_atol(char *str)
 {
 	long	nb;
@@ -31,6 +39,12 @@ long	ft_atol(char *str)
 	return (nb);
 }
 
+/**
+ * @brief Checks if a character is a digit (0–9).
+ *
+ * @param c The character to check.
+ * @return 1 if the character is a digit, 0 otherwise.
+ */
 int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
@@ -38,6 +52,14 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
+/**
+ * @brief Validates an input string to ensure it is a positive integer.
+ *
+ * Trims whitespace, checks for invalid characters and malformed signs.
+ *
+ * @param argv The input string to validate.
+ * @return 0 if input is valid, 1 otherwise.
+ */
 int	check_input(char *argv)
 {
 	int		i;
@@ -64,6 +86,15 @@ int	check_input(char *argv)
 	return (free(input), 0);
 }
 
+/**
+ * @brief Parses command-line arguments and initializes simulation values.
+ *
+ * Validates input and assigns values to the simulation structure.
+ *
+ * @param argv The argument vector from main().
+ * @param sim Pointer to the simulation structure to populate.
+ * @return 0 on success, 1 on error.
+ */
 int	parse(char **argv, t_simulation *sim)
 {
 	int	i;
