@@ -12,6 +12,15 @@
 
 #include "philosophers.h"
 
+/**
+ * @brief Simulates the thinking behavior of a philosopher.
+ *
+ * Prints "is thinking" and optionally waits if both the philosopher
+ * and total count are odd to help with synchronization.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @param sim Pointer to the simulation structure.
+ */
 void	to_think(t_philos *philo, t_simulation *sim)
 {
 	print_actions(sim, philo, "is thinking");
@@ -19,6 +28,15 @@ void	to_think(t_philos *philo, t_simulation *sim)
 		sleeping(philo, 1, sim);
 }
 
+/**
+ * @brief Simulates the sleeping behavior of a philosopher.
+ *
+ * If the philosopher would die before completing sleep, it prints
+ * "died" and exits. Otherwise, it sleeps normally.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @return 1 if the philosopher dies, 0 otherwise.
+ */
 int	to_sleep(t_philos *philo)
 {
 	philo->act_time = set_time();
@@ -41,6 +59,15 @@ int	to_sleep(t_philos *philo)
 	return (0);
 }
 
+/**
+ * @brief Main routine for each philosopher thread.
+ *
+ * Executes the philosopher cycle: eat, sleep, think. Terminates when
+ * the simulation ends or the philosopher dies.
+ *
+ * @param arg Pointer to the philosopher cast as void *.
+ * @return Always returns NULL.
+ */
 void	*do_smth(void *arg)
 {
 	t_philos	*philo;
@@ -68,6 +95,14 @@ void	*do_smth(void *arg)
 	return (NULL);
 }
 
+/**
+ * @brief Destroys all threads and mutexes after simulation ends.
+ *
+ * Waits for all philosopher threads and the death thread to finish,
+ * then destroys all mutexes.
+ *
+ * @param sim Pointer to the simulation structure.
+ */
 void	destroy_threads_and_mutex(t_simulation *sim)
 {
 	int	i;
@@ -88,6 +123,15 @@ void	destroy_threads_and_mutex(t_simulation *sim)
 	pthread_mutex_destroy(&sim->mutex);
 }
 
+/**
+ * @brief Creates all philosopher and monitoring threads.
+ *
+ * Initializes mutexes, sets the start time, creates philosopher
+ * threads and the death monitor thread. Destroys all threads after.
+ *
+ * @param sim Pointer to the simulation structure.
+ * @return 0 on success, 1 on thread creation failure.
+ */
 int	create_threads(t_simulation *sim)
 {
 	int				created;
