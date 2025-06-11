@@ -12,6 +12,15 @@
 
 #include "philosophers.h"
 
+/**
+ * @brief Displays an error message based on the error code.
+ *
+ * Writes a specific error message to standard error depending on the
+ * input value.
+ *
+ * @param i The error code (1 to 5).
+ * @return Always returns 1 to indicate error.
+ */
 int	error(int i)
 {
 	if (i == 1)
@@ -27,6 +36,16 @@ int	error(int i)
 	return (1);
 }
 
+/**
+ * @brief Entry point of the philosopher simulation program.
+ *
+ * Validates arguments, parses input, initializes philosophers,
+ * and starts the simulation threads.
+ *
+ * @param argc Argument count.
+ * @param argv Argument vector.
+ * @return 0 on success, 1 on any initialization or runtime error.
+ */
 int	main(int argc, char **argv)
 {
 	t_simulation	sim;
