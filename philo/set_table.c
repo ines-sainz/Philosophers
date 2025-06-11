@@ -12,6 +12,17 @@
 
 #include "philosophers.h"
 
+/**
+ * @brief Simulates the sleeping behavior of a philosopher.
+ *
+ * Tracks elapsed time and checks if the philosopher should be interrupted 
+ * (e.g., if time to die is reached).
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @param time_to_sleep Time the philosopher should sleep in milliseconds.
+ * @param sim Pointer to the simulation structure.
+ * @return Always returns 0.
+ */
 int	sleeping(t_philos *philo, long time_to_sleep, t_simulation *sim)
 {
 	struct timeval	time;
@@ -33,6 +44,13 @@ int	sleeping(t_philos *philo, long time_to_sleep, t_simulation *sim)
 	return (0);
 }
 
+/**
+ * @brief Gets the current time in milliseconds.
+ *
+ * Uses gettimeofday to compute milliseconds since epoch.
+ *
+ * @return The current time in milliseconds.
+ */
 long	set_time(void)
 {
 	struct timeval	time;
@@ -43,6 +61,15 @@ long	set_time(void)
 	return (milliseconds);
 }
 
+/**
+ * @brief Initializes philosopher structures and assigns forks.
+ *
+ * Allocates memory for philosophers, sets their parameters,
+ * and links left and right forks in a circular manner.
+ *
+ * @param sim Pointer to the simulation structure.
+ * @return 0 on success, 1 on allocation failure.
+ */
 int	set_philos(t_simulation *sim)
 {
 	int			i;
