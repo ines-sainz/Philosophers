@@ -12,6 +12,15 @@
 
 #include "philosophers.h"
 
+/**
+ * @brief Compares two strings up to n characters.
+ *
+ * @param s1 Pointer to the first string.
+ * @param s2 Pointer to the second string.
+ * @param n Maximum number of characters to compare.
+ * @return Difference between the first differing characters,
+ *         or 0 if equal up to n.
+ */
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	size_t	i;
@@ -26,6 +35,15 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
+/**
+ * @brief Trims characters from the beginning and end of a string.
+ *
+ * Removes all characters in the set from the start and end of s1.
+ *
+ * @param s1 The string to be trimmed.
+ * @param set The set of characters to remove.
+ * @return A new trimmed string, or NULL on allocation failure.
+ */
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	int		i;
@@ -43,6 +61,13 @@ char	*ft_strtrim(char const *s1, char const *set)
 	return (new_string);
 }
 
+/**
+ * @brief Searches for the first occurrence of a character in a string.
+ *
+ * @param s Pointer to the string to search.
+ * @param c Character to find.
+ * @return Pointer to the first occurrence of c, or NULL if not found.
+ */
 char	*ft_strchr(const char *s, int c)
 {
 	int	i;
@@ -59,6 +84,12 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
+/**
+ * @brief Calculates the length of a string.
+ *
+ * @param s Pointer to the string.
+ * @return The number of characters before the null terminator.
+ */
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -69,6 +100,17 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
+/**
+ * @brief Extracts a substring from a string.
+ *
+ * Allocates and returns a substring starting at index 'start' with a max
+ * length of 'len'.
+ *
+ * @param s The original string.
+ * @param start The start index of the substring.
+ * @param len The maximum length of the substring.
+ * @return A pointer to the new substring, or NULL on allocation failure.
+ */
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t	i;
