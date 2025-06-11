@@ -12,6 +12,19 @@
 
 #include "philosophers.h"
 
+/**
+ * @brief Checks if a philosopher has died or met eating requirements.
+ *
+ * Compares the philosopher's last meal time with the allowed time to die.
+ * If the philosopher has died, sets flags and prints a message. Also checks
+ * if all meals have been completed based on simulation parameters.
+ *
+ * @param sim Pointer to the simulation structure.
+ * @param last_eat Last time the philosopher ate (will be updated inside).
+ * @param i Index of the philosopher in the simulation array.
+ * @return 1 if the philosopher has died or the simulation should stop,
+ *         0 otherwise.
+ */
 int	ask_death(t_simulation *sim, long last_eat, int i)
 {
 	pthread_mutex_lock(&sim->mutex);
@@ -41,6 +54,16 @@ int	ask_death(t_simulation *sim, long last_eat, int i)
 	return (0);
 }
 
+/**
+ * @brief Thread function to monitor philosopher deaths.
+ *
+ * Continuously loops through all philosophers, checking if any have died
+ * using ask_death(). Exits the loop and returns when a death is detected
+ * or the simulation ends.
+ *
+ * @param arg Pointer to the simulation structure, cast as void*.
+ * @return NULL when the monitoring thread ends.
+ */
 void	*death(void *arg)
 {
 	t_simulation	*sim;
