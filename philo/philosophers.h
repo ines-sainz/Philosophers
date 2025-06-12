@@ -78,7 +78,7 @@ void		print_actions(t_simulation *sim, t_philos *philo, char *action);
 void		*death(void *arg);
 int			to_eat(t_philos *philo, t_simulation *sim);
 
-//LIBFT
+// LIBFT
 char		*ft_strtrim(char const *s1, char const *set);
 char		*ft_strchr(const char *s, int c);
 size_t		ft_strlen(const char *s);
